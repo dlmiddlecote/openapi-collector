@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+pytest-cov = "*"
+pytest = "*"
+coveralls = "*"
+coverage = "*"
+pylint = "*"
+
+[packages]
+pykube-ng = {extras = ["gcp"],version = "*"}
+flask = "*"
+requests = "*"
+
+[requires]
+python_version = "3.7"

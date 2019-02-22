@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openapi-collector-swagger-dynamic-config
+  labels:
+    app: openapi-collector
+data:
+  swagger-config.json: |
+    {
+      "urls": []
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openapi-collector-nginx-dynamic-config
+  labels:
+    app: openapi-collector
+data: {}

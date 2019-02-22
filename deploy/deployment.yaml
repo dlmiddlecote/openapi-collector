@@ -1,0 +1,112 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openapi-collector
+  labels:
+    app: openapi-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openapi-collector
+  template:
+    metadata:
+      labels:
+        app: openapi-collector
+    spec:
+      serviceAccountName: openapi-collector
+      containers:
+        - name: ui
+          image: swaggerapi/swagger-ui:v3.20.8
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CONFIG_URL
+              value: /swagger-config.json
+          ports:
+            - name: ui
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: ui
+          readinessProbe:
+            httpGet:
+              path: /
+              port: ui
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+        - name: router
+          image: dlmiddlecote/openapi-router:e5b0301-dirty
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /swagger-config.json
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /swagger-config.json
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+          volumeMounts:
+            - name: swagger-dynamic-config
+              mountPath: /www/data
+              readOnly: true
+            - name: nginx-dynamic-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+        - name: proxy
+          image: dlmiddlecote/openapi-proxy:e5b0301-dirty
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: proxy
+              containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: proxy
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: proxy
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+        - name: collector
+          image: dlmiddlecote/openapi-collector:e5b0301-dirty
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+      volumes:
+        - name: swagger-dynamic-config
+          configMap:
+            name: openapi-collector-swagger-dynamic-config
+        - name: nginx-dynamic-config
+          configMap:
+            name: openapi-collector-nginx-dynamic-config
