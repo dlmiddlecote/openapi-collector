@@ -1,0 +1,84 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "openapi-collector.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "openapi-collector.name" . }}
+    helm.sh/chart: {{ include "openapi-collector.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "openapi-collector.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "openapi-collector.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: swagger-ui
+          image: "{{ .Values.swaggerUI.image }}"
+          imagePullPolicy: {{ .Values.swaggerUI.pullPolicy }}
+          env:
+            - name: CONFIG_URL
+              value: /swagger-config.json
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: swagger-config
+              mountPath: /www/data
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+        # - name: swagger-config
+        #   image: nginx:1.15.8
+        #   imagePullPolicy: IfNotPresent
+        #   ports:
+        #     - name: config
+        #       containerPort: 80
+        #       protocol: TCP
+        #   livenessProbe:
+        #     httpGet:
+        #       path: /swagger-config.json
+        #       port: config
+        #   readinessProbe:
+        #     httpGet:
+        #       path: /swagger-config.json
+        #       port: config
+        #   resources:
+        #     requests:
+        #       cpu: 50m
+        #       memory: 50Mi
+        #   volumeMounts:
+        #     - name: swagger-config
+        #       mountPath: /www/data
+        #       readOnly: true
+        #     - name: nginx-config
+        #       mountPath: /etc/nginx/conf.d
+        #       readOnly: true
+      volumes:
+        - name: swagger-config
+          configMap:
+            name: {{ include "openapi-collector.swagger.config" . }}
+        - name: nginx-config
+          configMap:
+            name: {{ include "openapi-collector.nginx.config" . }}
