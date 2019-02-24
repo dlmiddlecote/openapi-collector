@@ -23,58 +23,52 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
-        - name: swagger-ui
-          image: "{{ .Values.swaggerUI.image }}"
-          imagePullPolicy: {{ .Values.swaggerUI.pullPolicy }}
+        - name: ui
+          image: "{{ .Values.ui.image }}"
+          imagePullPolicy: {{ .Values.ui.pullPolicy }}
           env:
             - name: CONFIG_URL
               value: /swagger-config.json
           ports:
-            - name: http
+            - name: ui
               containerPort: 8080
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: ui
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: ui
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        - name: proxy
+          image: dlmiddlecote/openapi-collector-proxy:v0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /swagger-config.json
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /swagger-config.json
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
           volumeMounts:
             - name: swagger-config
               mountPath: /www/data
               readOnly: true
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
-        # - name: swagger-config
-        #   image: nginx:1.15.8
-        #   imagePullPolicy: IfNotPresent
-        #   ports:
-        #     - name: config
-        #       containerPort: 80
-        #       protocol: TCP
-        #   livenessProbe:
-        #     httpGet:
-        #       path: /swagger-config.json
-        #       port: config
-        #   readinessProbe:
-        #     httpGet:
-        #       path: /swagger-config.json
-        #       port: config
-        #   resources:
-        #     requests:
-        #       cpu: 50m
-        #       memory: 50Mi
-        #   volumeMounts:
-        #     - name: swagger-config
-        #       mountPath: /www/data
-        #       readOnly: true
-        #     - name: nginx-config
-        #       mountPath: /etc/nginx/conf.d
-        #       readOnly: true
+              readOnly: true
       volumes:
         - name: swagger-config
           configMap:

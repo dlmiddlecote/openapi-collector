@@ -1,5 +1,5 @@
-FROM swaggerapi/swagger-ui:v3.20.8
+FROM nginx:1.15.8
 
 COPY ./docker/nginx.conf /etc/nginx/
 
-CMD ["sh", "/usr/share/nginx/run.sh"]
+CMD ["nginx", "-g", "daemon off;"]
