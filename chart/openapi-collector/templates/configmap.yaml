@@ -11,11 +11,6 @@ metadata:
 data:
   swagger-config.json: |
     {
-        "dom_id": "#swagger-ui",
-        "presets": [
-            "SwaggerUI.presets.ApisPreset",
-            "StandalonePreset"
-        ],
         "urls": [
             {
                 "name": "Test",
@@ -38,7 +33,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  default.conf: |
+  premium-api.conf: |
     location /premium-api {
       rewrite  ^/premium-api/(.*) /$1 break;
       proxy_pass http://premium-api;
