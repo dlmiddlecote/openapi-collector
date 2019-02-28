@@ -1,5 +1,8 @@
 FROM nginx:1.15.8
 
-COPY ./docker/nginx.conf /etc/nginx/
+RUN apt-get update && apt-get -y install inotify-tools
 
-CMD ["nginx", "-g", "daemon off;"]
+COPY ./docker/nginx.conf /etc/nginx/
+COPY ./docker/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT /entrypoint.sh

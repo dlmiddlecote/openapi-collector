@@ -31,14 +31,18 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "openapi-collector.swagger.config" -}}
-{{- printf "%s-%s" (include "openapi-collector.name" .) "swagger-config" -}}
-{{- end -}}
-
-{{- define "openapi-collector.swagger.defaultConfig" -}}
+{{- define "openapi-collector.swagger.config.default" -}}
 {{- printf "%s-%s" (include "openapi-collector.name" .) "swagger-default-config" -}}
 {{- end -}}
 
-{{- define "openapi-collector.nginx.config" -}}
-{{- printf "%s-%s" (include "openapi-collector.name" .) "nginx-config" -}}
+{{- define "openapi-collector.swagger.config.dynamic" -}}
+{{- printf "%s-%s" (include "openapi-collector.name" .) "swagger-dynamic-config" -}}
+{{- end -}}
+
+{{- define "openapi-collector.nginx.config.default" -}}
+{{- printf "%s-%s" (include "openapi-collector.name" .) "nginx-default-config" -}}
+{{- end -}}
+
+{{- define "openapi-collector.nginx.config.dynamic" -}}
+{{- printf "%s-%s" (include "openapi-collector.name" .) "nginx-dynamic-config" -}}
 {{- end -}}

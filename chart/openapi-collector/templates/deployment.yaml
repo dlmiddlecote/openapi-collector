@@ -63,16 +63,16 @@ spec:
               cpu: 50m
               memory: 50Mi
           volumeMounts:
-            - name: swagger-config
+            - name: swagger-dynamic-config
               mountPath: /www/data
               readOnly: true
-            - name: nginx-config
+            - name: nginx-dynamic-config
               mountPath: /etc/nginx/conf.d
               readOnly: true
       volumes:
-        - name: swagger-config
+        - name: swagger-dynamic-config
           configMap:
-            name: {{ include "openapi-collector.swagger.config" . }}
-        - name: nginx-config
+            name: {{ include "openapi-collector.swagger.config.dynamic" . }}
+        - name: nginx-dynamic-config
           configMap:
-            name: {{ include "openapi-collector.nginx.config" . }}
+            name: {{ include "openapi-collector.nginx.config.dynamic" . }}
