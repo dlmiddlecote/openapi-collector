@@ -1,0 +1,3 @@
+version: "1"
+domain: openapi-collector.io
+repo: github.com/dlmiddlecote/openapi-collector/collector
