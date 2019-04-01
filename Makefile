@@ -19,6 +19,6 @@ docker:
 	@echo 'Docker images $(IMAGE_PREFIX)-router:$(TAG), $(IMAGE_PREFIX)-collector:$(TAG), $(IMAGE_PREFIX)-proxy:$(TAG) can now be used.'
 
 push: docker
-	docker push t "$(IMAGE_PREFIX)-router:$(TAG)"
-	docker push t "$(IMAGE_PREFIX)-collector:$(TAG)"
-	docker push t "$(IMAGE_PREFIX)-proxy:$(TAG)"
+	docker push "$(IMAGE_PREFIX)-router:$(TAG)"
+	docker push "$(IMAGE_PREFIX)-collector:$(TAG)"
+	docker push "$(IMAGE_PREFIX)-proxy:$(TAG)"
