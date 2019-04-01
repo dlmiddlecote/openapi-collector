@@ -21,7 +21,7 @@ To see the collector in action, deploy an app that exposes an OpenAPI spec, and 
 $ # deploy app
 $ kubectl annotate service app openapi/collect=true
 $ kubectl annotate service app openapi/port=80  # port name or number that the spec is accessible at
-$ kubectl annotate service app openapi/path=/. # base path of specification
+$ kubectl annotate service app openapi/path=/  # base path of specification
 ```
 
 You should be able to then connect to the collector Pod and see the specification in the UI. NOTE: This may take some time to appear, dependent on the poll interval of the collector, and also [the Kubelet sync period](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically).
@@ -30,23 +30,28 @@ You should be able to then connect to the collector Pod and see the specificatio
 
 The OpenAPI Spec Collector is configured via command line args and Kubernetes annotations.
 
-*Kubernetes Annotations*
+*Kubernetes Annotations*:
 
-`openapi/collect`
+- `openapi/collect`
+
 	Annotate `Service` resource with value `”true”`  to mark the `Service` as one exposing an OpenAPI spec, and one that should be collected. 
 
-`openapi/port`
+- `openapi/port`
+	
 	Annotate `Service` resource with the port number or name that the OpenAPI spec will be exposed at.
 
-`openapi/path`
+- `openapi/path`
+	
 	Annotate `Service` resource with the base path of the OpenAPI spec, i.e. use the value `”/“` if the spec is available at `/openapi.json`.
 
-*Command line args*
+*Command line args*:
 
-`—debug`
+- `—debug`
+	
 	Print more information.
 
-`—interval`
+- `—interval`
+	
 	Loop interval (default 30s).
 
 ## Contributing
@@ -59,7 +64,7 @@ You can run the collector against your current kubeconfig context like this:
 ```
 $ pip install pipenv
 $ pipenv install —dev
-$ pipenv she’ll
+$ pipenv shell
 $ python -m openapi_collector
 ```
 
