@@ -3,8 +3,8 @@ import json
 import pykube
 
 
-NGINX_CONFIGMAP_NAME = 'openapi-collector-nginx-dynamic-config'
-SWAGGER_UI_CONFIGMAP_NAME = 'openapi-collector-swagger-dynamic-config'
+NGINX_CONFIGMAP_NAME = 'openapi-collector-router-config'
+SWAGGER_UI_CONFIGMAP_NAME = 'openapi-collector-ui-config'
 
 NGINX_UPSTREAM_TMPL = """
 upstream {host} {{
