@@ -9,6 +9,8 @@ By processing annotated `Service`s, the UI is automatically updated with new spe
 
 ## Design
 
+![Architecture Diagram](docs/architecture-diagram.png)
+
 ## Usage
 
 Deploy the collector into your cluster:
