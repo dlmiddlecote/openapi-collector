@@ -7,6 +7,8 @@ Kubernetes OpenAPI Spec Collector aggregates (collects) all specifications expos
 
 By processing annotated `Service`s, the UI is automatically updated with new specifications as they are added or evolve, and is an excellent way to explore APIs.
 
+This project was heavily inspired in style and implementation by [hjacobs/kube-janitor](https://github.com/hjacobs/kube-janitor).
+
 ## Design
 
 ![Architecture Diagram](docs/architecture-diagram.png)
