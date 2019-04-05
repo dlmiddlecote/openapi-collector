@@ -3,8 +3,8 @@ import json
 import pykube
 
 
-NGINX_CONFIGMAP_NAME = 'openapi-collector-nginx-dynamic-config'
-SWAGGER_UI_CONFIGMAP_NAME = 'openapi-collector-swagger-dynamic-config'
+ROUTER_CONFIGMAP_NAME = 'openapi-collector-router-config'
+UI_CONFIGMAP_NAME = 'openapi-collector-ui-config'
 
 NGINX_UPSTREAM_TMPL = """
 upstream {host} {{
@@ -32,10 +32,10 @@ def urljoin(*args):
     return "/".join(map(lambda x: str(x).strip("/"), args))
 
 
-def build_nginx_configmap(api, specs):
+def build_router_configmap(api, specs):
     cm_spec = {
         "metadata": {
-            "name": NGINX_CONFIGMAP_NAME,
+            "name": ROUTER_CONFIGMAP_NAME,
         },
     }
 
@@ -67,10 +67,10 @@ def build_nginx_configmap(api, specs):
     return pykube.ConfigMap(api, cm_spec)
 
 
-def build_swagger_configmap(api, specs):
+def build_ui_configmap(api, specs):
     cm_spec = {
         "metadata": {
-            "name": SWAGGER_UI_CONFIGMAP_NAME,
+            "name": UI_CONFIGMAP_NAME,
         },
     }
 

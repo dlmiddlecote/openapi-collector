@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openapi-collector-swagger-dynamic-config
+  name: openapi-collector-ui-config
   labels:
     app: openapi-collector
 data:
@@ -15,7 +15,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openapi-collector-nginx-dynamic-config
+  name: openapi-collector-router-config
   labels:
     app: openapi-collector
 data: {}

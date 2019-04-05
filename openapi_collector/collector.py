@@ -3,7 +3,7 @@ from collections import namedtuple
 
 import pykube
 
-from openapi_collector.config_gen import build_nginx_configmap, build_swagger_configmap
+from openapi_collector.config_gen import build_router_configmap, build_ui_configmap
 
 logger = logging.getLogger(__name__)
 
@@ -55,10 +55,10 @@ def collect_specs(api):
 
             specs.append(Spec(svc.name, svc.namespace, port, path))
 
-    nginx_cm = build_nginx_configmap(api, specs)
-    swagger_cm = build_swagger_configmap(api, specs)
+    router_cm = build_router_configmap(api, specs)
+    ui_cm = build_ui_configmap(api, specs)
 
-    for cm in [nginx_cm, swagger_cm]:
+    for cm in [router_cm, ui_cm]:
         if cm.exists():
             cm.delete()
         cm.create()

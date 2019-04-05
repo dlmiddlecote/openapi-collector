@@ -7,9 +7,31 @@ Kubernetes OpenAPI Spec Collector aggregates (collects) all specifications expos
 
 By processing annotated `Service`s, the UI is automatically updated with new specifications as they are added or evolve, and is an excellent way to explore APIs.
 
+This project was heavily inspired in style and implementation by [hjacobs/kube-janitor](https://github.com/hjacobs/kube-janitor).
+
 ## Design
 
 ![Architecture Diagram](docs/architecture-diagram.png)
+
+The OpenAPI Collector Pod consists of 4 containers; `ui`, `router`, `proxy` and `collector`. Two ConfigMaps (one for the ui config, one for the router config) are also required. These ConfigMaps are automatically updated by the `collector` container, which polls the Kubernetes API to find Services exposing OpenAPI Specs.
+
+*Containers*
+
+- `ui`
+
+	This is a plain swagger-ui container, that is configured to retrieve its configuration from a local `/swagger-config.json` endpoint (served by the router). This UI should be accessed via the router.
+
+- `router`
+
+	This container is one half of the brain of the OpenAPI Collector. It is powered by nginx and all requests flow through this. Requests are then fanned out accordingly to either the ui, proxy or backend Services directly.
+
+- `proxy`
+
+	This container is a small Flask application that augments the OpenAPI spec that is collected, to insert a new, fake, server that will be used to route requests correctly via the router.
+
+- `collector`
+
+	This container is the other half of the brain of the OpenAPI Collector, and polls the Kubernetes API looking for Services that expose OpenAPI Specs. These found Services are then used to update the ui and router configuration. 
 
 ## Usage
 
