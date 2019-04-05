@@ -93,12 +93,12 @@ def test_collect_specs_no_cms():
                 }],
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-nginx-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
             data = {}
             response.status_code = 404
             response.ok = False
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-swagger-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
             data = {}
             response.status_code = 404
             response.ok = False
@@ -119,14 +119,14 @@ def test_collect_specs_no_cms():
     _, nginx_call = api_mock.post.call_args_list[0]
     assert "configmaps" == nginx_call["url"]
     nginx_data = json.loads(nginx_call["data"])
-    assert "openapi-collector-nginx-dynamic-config" == nginx_data["metadata"]["name"]
+    assert "openapi-collector-router-config" == nginx_data["metadata"]["name"]
     assert "svc-1-ns-1-location.conf" in nginx_data["data"]
     assert "svc-1-ns-1-upstream.conf" in nginx_data["data"]
 
     _, swagger_call = api_mock.post.call_args_list[1]
     assert "configmaps" == swagger_call["url"]
     swagger_data = json.loads(swagger_call["data"])
-    assert "openapi-collector-swagger-dynamic-config" == swagger_data["metadata"]["name"]
+    assert "openapi-collector-ui-config" == swagger_data["metadata"]["name"]
     assert "swagger-config.json" in swagger_data["data"]
 
 
@@ -149,11 +149,11 @@ def test_collect_specs_cm_replaced():
                 }],
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-nginx-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
             data = {
                 "items": [{
                     "metadata": {
-                        "name": "openapi-collector-nginx-dynamic-config"
+                        "name": "openapi-collector-router-config"
                     },
                     "data": {
                         "foo.conf": ""
@@ -161,11 +161,11 @@ def test_collect_specs_cm_replaced():
                 }]
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-swagger-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
             data = {
                 "items": [{
                     "metadata": {
-                        "name": "openapi-collector-swagger-dynamic-config"
+                        "name": "openapi-collector-ui-config"
                     },
                     "data": {
                         "swagger-config.json": """{
@@ -191,7 +191,7 @@ def test_collect_specs_cm_replaced():
     _, nginx_call = api_mock.post.call_args_list[0]
     assert "configmaps" == nginx_call["url"]
     nginx_data = json.loads(nginx_call["data"])
-    assert "openapi-collector-nginx-dynamic-config" == nginx_data["metadata"]["name"]
+    assert "openapi-collector-router-config" == nginx_data["metadata"]["name"]
     assert "svc-1-ns-1-location.conf" in nginx_data["data"]
     assert "svc-1-ns-1-upstream.conf" in nginx_data["data"]
     assert "foo.conf" not in nginx_data["data"]
@@ -199,16 +199,16 @@ def test_collect_specs_cm_replaced():
     _, swagger_call = api_mock.post.call_args_list[1]
     assert "configmaps" == swagger_call["url"]
     swagger_data = json.loads(swagger_call["data"])
-    assert "openapi-collector-swagger-dynamic-config" == swagger_data["metadata"]["name"]
+    assert "openapi-collector-ui-config" == swagger_data["metadata"]["name"]
     assert "swagger-config.json" in swagger_data["data"]
     swagger_conf = json.loads(swagger_data["data"]["swagger-config.json"])
     assert "foo" not in set(u["name"] for u in swagger_conf["urls"])
 
     _, nginx_delete_call = api_mock.delete.call_args_list[0]
-    assert "configmaps/openapi-collector-nginx-dynamic-config" == nginx_delete_call["url"]
+    assert "configmaps/openapi-collector-router-config" == nginx_delete_call["url"]
 
     _, swagger_delete_call = api_mock.delete.call_args_list[1]
-    assert "configmaps/openapi-collector-swagger-dynamic-config" == swagger_delete_call["url"]
+    assert "configmaps/openapi-collector-ui-config" == swagger_delete_call["url"]
 
 
 def test_collect_specs_no_services():
@@ -230,12 +230,12 @@ def test_collect_specs_no_services():
                 }],
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-nginx-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
             data = {}
             response.status_code = 404
             response.ok = False
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-swagger-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
             data = {}
             response.status_code = 404
             response.ok = False
@@ -256,13 +256,13 @@ def test_collect_specs_no_services():
     _, nginx_call = api_mock.post.call_args_list[0]
     assert "configmaps" == nginx_call["url"]
     nginx_data = json.loads(nginx_call["data"])
-    assert "openapi-collector-nginx-dynamic-config" == nginx_data["metadata"]["name"]
+    assert "openapi-collector-router-config" == nginx_data["metadata"]["name"]
     assert not nginx_data["data"]
 
     _, swagger_call = api_mock.post.call_args_list[1]
     assert "configmaps" == swagger_call["url"]
     swagger_data = json.loads(swagger_call["data"])
-    assert "openapi-collector-swagger-dynamic-config" == swagger_data["metadata"]["name"]
+    assert "openapi-collector-ui-config" == swagger_data["metadata"]["name"]
     assert "swagger-config.json" in swagger_data["data"]
     swagger_conf = json.loads(swagger_data["data"]["swagger-config.json"])
     assert not swagger_conf["urls"]
@@ -299,12 +299,12 @@ def test_collect_specs_skip_no_port():
                 }],
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-nginx-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
             data = {}
             response.status_code = 404
             response.ok = False
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-swagger-dynamic-config":
+        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
             data = {}
             response.status_code = 404
             response.ok = False
@@ -325,14 +325,14 @@ def test_collect_specs_skip_no_port():
     _, nginx_call = api_mock.post.call_args_list[0]
     assert "configmaps" == nginx_call["url"]
     nginx_data = json.loads(nginx_call["data"])
-    assert "openapi-collector-nginx-dynamic-config" == nginx_data["metadata"]["name"]
+    assert "openapi-collector-router-config" == nginx_data["metadata"]["name"]
     assert "svc-1-ns-1-location.conf" not in nginx_data["data"]
     assert "svc-1-ns-1-upstream.conf" not in nginx_data["data"]
 
     _, swagger_call = api_mock.post.call_args_list[1]
     assert "configmaps" == swagger_call["url"]
     swagger_data = json.loads(swagger_call["data"])
-    assert "openapi-collector-swagger-dynamic-config" == swagger_data["metadata"]["name"]
+    assert "openapi-collector-ui-config" == swagger_data["metadata"]["name"]
     assert "swagger-config.json" in swagger_data["data"]
     swagger_conf = json.loads(swagger_data["data"]["swagger-config.json"])
     assert 1 == len(swagger_conf["urls"])

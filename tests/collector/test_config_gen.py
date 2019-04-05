@@ -5,25 +5,25 @@ import pykube
 
 from openapi_collector.collector import Spec
 from openapi_collector.config_gen import (
-    NGINX_CONFIGMAP_NAME,
-    SWAGGER_UI_CONFIGMAP_NAME,
-    build_nginx_configmap,
-    build_swagger_configmap,
+    ROUTER_CONFIGMAP_NAME,
+    UI_CONFIGMAP_NAME,
+    build_router_configmap,
+    build_ui_configmap,
 )
 
 
-def test_build_nginx_configmap():
+def test_build_router_configmap():
     namespace = "default"
     # name, namespace, port, path
     spec = Spec("test-svc", "test-ns", 8000, "/v1")
 
     api_mock = MagicMock(config=MagicMock(namespace=namespace))
 
-    cm = build_nginx_configmap(api_mock, [spec])
+    cm = build_router_configmap(api_mock, [spec])
 
     assert type(cm) == pykube.ConfigMap
     assert namespace == cm.namespace
-    assert NGINX_CONFIGMAP_NAME == cm.name
+    assert ROUTER_CONFIGMAP_NAME == cm.name
     assert "data" in cm.obj
 
     assert "test-svc-test-ns-upstream.conf" in cm.obj["data"]
@@ -48,18 +48,18 @@ location /test-svc-test-ns {
 """ == cm.obj["data"]["test-svc-test-ns-location.conf"]
 
 
-def test_build_swagger_configmap():
+def test_build_ui_configmap():
     namespace = "default"
     # name, namespace, port, path
     spec = Spec("test-svc", "test-ns", 8000, "/v1")
 
     api_mock = MagicMock(config=MagicMock(namespace=namespace))
 
-    cm = build_swagger_configmap(api_mock, [spec])
+    cm = build_ui_configmap(api_mock, [spec])
 
     assert type(cm) == pykube.ConfigMap
     assert namespace == cm.namespace
-    assert SWAGGER_UI_CONFIGMAP_NAME == cm.name
+    assert UI_CONFIGMAP_NAME == cm.name
     assert "data" in cm.obj
 
     assert "swagger-config.json" in cm.obj["data"]
