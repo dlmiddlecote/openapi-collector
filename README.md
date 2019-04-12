@@ -23,7 +23,7 @@ The OpenAPI Collector Pod consists of 4 containers; `ui`, `router`, `proxy` and 
 
 - `router`
 
-	This container is one half of the brain of the OpenAPI Collector. It is powered by nginx and all requests flow through this. Requests are then fanned out accordingly to either the ui, proxy or backend Services directly.
+	This container is one half of the brain of the OpenAPI Collector. It is powered by nginx and all requests flow through this. Requests are then fanned out accordingly to either the ui, proxy or backend services directly.
 
 - `proxy`
 
@@ -31,7 +31,7 @@ The OpenAPI Collector Pod consists of 4 containers; `ui`, `router`, `proxy` and 
 
 - `collector`
 
-	This container is the other half of the brain of the OpenAPI Collector, and polls the Kubernetes API looking for Services that expose OpenAPI Specs. These found Services are then used to update the ui and router configuration. 
+	This container is the other half of the brain of the OpenAPI Collector, and polls the Kubernetes API looking for Services that expose OpenAPI Specs. These found Services are then used to update the ui and router configuration.
 
 ## Usage
 
@@ -70,11 +70,11 @@ The OpenAPI Spec Collector is configured via command line args and Kubernetes an
 
 *Command line args*:
 
-- `—debug`
+- `--debug`
 	
 	Print more information.
 
-- `—interval`
+- `--interval`
 	
 	Loop interval (default 30s).
 
@@ -87,7 +87,7 @@ The best way to contribute is to provide feedback. I’d love to hear what you l
 You can run the collector against your current kubeconfig context like this:
 ```
 $ pip install pipenv
-$ pipenv install —dev
+$ pipenv install --dev
 $ pipenv shell
 $ python -m openapi_collector
 ```
