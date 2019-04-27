@@ -43,7 +43,7 @@ spec:
               cpu: 50m
               memory: 50Mi
         - name: router
-          image: dlmiddlecote/openapi-router:0.1.1
+          image: dlmiddlecote/openapi-router:0.1.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -72,7 +72,7 @@ spec:
               mountPath: /etc/nginx/conf.d
               readOnly: true
         - name: proxy
-          image: dlmiddlecote/openapi-proxy:0.1.1
+          image: dlmiddlecote/openapi-proxy:0.1.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: proxy
@@ -94,7 +94,7 @@ spec:
               cpu: 100m
               memory: 100Mi
         - name: collector
-          image: dlmiddlecote/openapi-collector:0.1.1
+          image: dlmiddlecote/openapi-collector:0.1.2
           imagePullPolicy: IfNotPresent
           resources:
             requests:
