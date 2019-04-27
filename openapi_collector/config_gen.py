@@ -29,7 +29,7 @@ def urljoin(*args):
     Joins given arguments into a url. Trailing and leading slashes are
     stripped from each argument, before being joined
     """
-    return "/".join(map(lambda x: str(x).strip("/"), args))
+    return "/".join(filter(bool, map(lambda x: str(x).strip("/"), args)))
 
 
 def build_router_configmap(api, specs):
