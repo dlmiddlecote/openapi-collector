@@ -106,7 +106,7 @@ def test_build_ui_configmap():
     assert "name" in swagger_conf["urls"][0]
     assert "url" in swagger_conf["urls"][0]
     assert "test-ns/test-svc" == swagger_conf["urls"][0]["name"]
-    assert "/test-svc-test-ns" == swagger_conf["urls"][0]["url"]
+    assert "/test-svc-test-ns/openapi.json" == swagger_conf["urls"][0]["url"]
 
 
 def test_build_ui_configmap_with_path():
@@ -131,4 +131,4 @@ def test_build_ui_configmap_with_path():
     assert "name" in swagger_conf["urls"][0]
     assert "url" in swagger_conf["urls"][0]
     assert "test-ns/test-svc" == swagger_conf["urls"][0]["name"]
-    assert "/test-svc-test-ns/v1" == swagger_conf["urls"][0]["url"]
+    assert "/test-svc-test-ns/v1/openapi.json" == swagger_conf["urls"][0]["url"]

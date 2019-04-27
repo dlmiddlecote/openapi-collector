@@ -32,6 +32,10 @@ def urljoin(*args):
     return "/".join(filter(bool, map(lambda x: str(x).strip("/"), args)))
 
 
+def get_spec_path(spec):
+    return urljoin(spec.path, "openapi.json")
+
+
 def build_router_configmap(api, specs):
     cm_spec = {
         "metadata": {
@@ -46,7 +50,7 @@ def build_router_configmap(api, specs):
         upstream_filename = f"{host}-upstream.conf"
         location_filename = f"{host}-location.conf"
 
-        spec_path = urljoin(spec.path, "/openapi.json")
+        spec_path = get_spec_path(spec)
 
         cm_data[upstream_filename] = NGINX_UPSTREAM_TMPL.format(
             host=host,
@@ -79,7 +83,7 @@ def build_ui_configmap(api, specs):
         host = f"{spec.name}-{spec.namespace}"
         urls.append({
             "name": f"{spec.namespace}/{spec.name}",
-            "url": f"/{urljoin(host, spec.path)}"
+            "url": f"/{urljoin(host, get_spec_path(spec))}"
         })
 
     cm_spec["data"] = {"swagger-config.json": json.dumps({"urls": urls})}
