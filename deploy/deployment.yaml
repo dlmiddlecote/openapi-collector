@@ -88,11 +88,11 @@ spec:
               port: proxy
           resources:
             requests:
-              cpu: 50m
-              memory: 50Mi
+              cpu: 100m
+              memory: 100Mi
             limits:
-              cpu: 50m
-              memory: 50Mi
+              cpu: 100m
+              memory: 100Mi
         - name: collector
           image: dlmiddlecote/openapi-collector:0.1.1
           imagePullPolicy: IfNotPresent
