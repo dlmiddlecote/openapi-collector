@@ -5,10 +5,17 @@ python:
   - "3.7"
 services:
   - docker
+env:
+  - GO111MODULE=on
 install:
   - pip install pipenv
   - pipenv install --dev
+before_script:
+  # install kubectl
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+  # install kind (This version is the last that works with go 1.11)
+  - go get sigs.k8s.io/kind@v0.2.1
 script:
-  - make test docker
+  - make test docker integration-tests
 after_success:
   - coveralls
