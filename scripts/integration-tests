@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e pipefail
+
+export TEST_MAX_WAIT_SEC=60
+
+k8s_wait_for_pod_ready() {
+    echo "Waiting for pod '${@}' to be ready ... "
+    local -i cnt=${TEST_MAX_WAIT_SEC:?}
+
+    # Retries just in case it is not stable
+    local -i successCount=0
+    while [ "$successCount" -lt "3" ]; do
+        if kubectl get pod "${@}" | grep -q Running; then
+            ((successCount=successCount+1))
+        fi
+        ((cnt=cnt-1)) || return 1
+        sleep 1
+    done
+}
+k8s_wait_for_pod_count() {
+    local pod_cnt=${1:?}; shift
+    echo "Waiting for pod '${@}' to have count==${pod_cnt} running ... "
+    local -i cnt=${TEST_MAX_WAIT_SEC:?}
+    # Retries just in case it is not stable
+    local -i successCount=0
+    while [ "$successCount" -lt "3" ]; do
+        if [[ $(kubectl get pod "${@}" -ogo-template='{{.items|len}}') == ${pod_cnt} ]]; then
+            ((successCount=successCount+1))
+        fi
+        ((cnt=cnt-1)) || return 1
+        sleep 1
+    done
+    k8s_wait_for_pod_ready "${@}"
+    echo "Finished waiting"
+}
+k8s_wait_for_uniq_pod() {
+    k8s_wait_for_pod_count 1 "$@"
+}
+k8s_wait_for_pod_gone() {
+    echo "Waiting for pod '${@}' to be gone ... "
+    local -i cnt=${TEST_MAX_WAIT_SEC:?}
+    until kubectl get pod "${@}" 2>&1 | grep -q "No resources found"; do
+        ((cnt=cnt-1)) || return 1
+        sleep 1
+    done
+}
+
+export KUBECONFIG="$(kind get kubeconfig-path --name="${CLUSTER_NAME}")"
+
+kubectl apply -f deploy/
+
+k8s_wait_for_uniq_pod -l app=openapi-collector
+
+kubectl delete -f deploy/
+
+k8s_wait_for_pod_gone -l app=openapi-collector

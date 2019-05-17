@@ -4,6 +4,8 @@ IMAGE_PREFIX ?= dlmiddlecote/openapi
 VERSION      ?= $(shell git describe --tags --always --dirty)
 TAG          ?= $(VERSION)
 
+CLUSTER_NAME ?= kind
+
 default: docker
 
 test:
@@ -22,3 +24,21 @@ push: docker
 	docker push "$(IMAGE_PREFIX)-router:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-collector:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-proxy:$(TAG)"
+
+create-kind:
+	kind create cluster  --name $(CLUSTER_NAME)
+
+delete-kind:
+	kind delete cluster  --name $(CLUSTER_NAME)
+
+load:
+	kind load docker-image $(IMAGE_PREFIX)-router:$(TAG) --name $(CLUSTER_NAME)
+	kind load docker-image $(IMAGE_PREFIX)-collector:$(TAG) --name $(CLUSTER_NAME)
+	kind load docker-image $(IMAGE_PREFIX)-proxy:$(TAG) --name $(CLUSTER_NAME)
+
+update-deploy-files:
+	perl -i -pe"s/image: $(subst /,\/,$(IMAGE_PREFIX))-(.*):.*/image: $(subst /,\/,$(IMAGE_PREFIX))-\1:$(subst /,\/,$(TAG))/g" ./deploy/deployment.yaml
+
+integration-tests: create-kind load update-deploy-files
+	CLUSTER_NAME=$(CLUSTER_NAME) ./scripts/integration-tests
+	make delete-kind CLUSTER_NAME=$(CLUSTER_NAME)
