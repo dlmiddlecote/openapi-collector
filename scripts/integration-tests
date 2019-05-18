@@ -44,12 +44,22 @@ k8s_wait_for_pod_gone() {
         sleep 1
     done
 }
+k8s_wait_for_pod_logline() {
+    local string="${1:?}"; shift
+    local -i cnt=${TEST_MAX_WAIT_SEC:?}
+    echo "Waiting for '${@}' to show logline '${string}' ..."
+    until kubectl logs "${@}"| grep -q "${string}"; do
+        ((cnt=cnt-1)) || return 1
+        sleep 1
+    done
+}
 
 export KUBECONFIG="$(kind get kubeconfig-path --name="${CLUSTER_NAME}")"
 
 kubectl apply -f deploy/
 
 k8s_wait_for_uniq_pod -l app=openapi-collector
+k8s_wait_for_pod_logline "Collector v${VERSION} started" -l app=openapi-collector -c collector
 
 kubectl delete -f deploy/
 

@@ -40,5 +40,5 @@ update-deploy-files:
 	perl -i -pe"s/image: $(subst /,\/,$(IMAGE_PREFIX))-(.*):.*/image: $(subst /,\/,$(IMAGE_PREFIX))-\1:$(subst /,\/,$(TAG))/g" ./deploy/deployment.yaml
 
 integration-tests: create-kind load update-deploy-files
-	CLUSTER_NAME=$(CLUSTER_NAME) ./scripts/integration-tests
+	CLUSTER_NAME=$(CLUSTER_NAME) VERSION=$(VERSION) ./scripts/integration-tests
 	make delete-kind CLUSTER_NAME=$(CLUSTER_NAME)
