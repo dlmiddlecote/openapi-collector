@@ -56,6 +56,8 @@ k8s_wait_for_pod_logline() {
 
 export KUBECONFIG="$(kind get kubeconfig-path --name="${CLUSTER_NAME}")"
 
+make update-deploy-files CLUSTER_NAME="$(CLUSTER_NAME)" VERSION="$(VERSION)"
+
 kubectl apply -f deploy/
 
 k8s_wait_for_uniq_pod -l app=openapi-collector
