@@ -15,6 +15,7 @@ pylint = "*"
 pykube-ng = {extras = ["gcp"],version = "*"}
 flask = "*"
 requests = "*"
+kopf = "==0.19rc2"
 
 [requires]
 python_version = "3.7"
