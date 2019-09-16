@@ -1,1 +1,1 @@
-__version__ = '0.0.1'  # will be replaced during build
+__version__ = "0.0.1"  # will be replaced during build

@@ -1,16 +1,30 @@
 .PHONY: test docker push
 
 IMAGE_PREFIX ?= dlmiddlecote/openapi
-VERSION      ?= $(shell git describe --tags --always --dirty)
+GITDIFFHASH       = $(shell git diff | md5sum | cut -c 1-4)
+VERSION      ?= $(shell git describe --tags --always --dirty=-dirty-$(GITDIFFHASH))
 TAG          ?= $(VERSION)
+CLUSTER_NAME ?= kind
 
 default: docker
 
-test:
-	pipenv run flake8
-	pipenv run coverage run --source openapi_collector -m py.test tests/collector
-	pipenv run coverage run -a --source openapi_proxy -m py.test tests/proxy
-	pipenv run coverage report
+.PHONY: test
+test: poetry lint test.unit
+
+.PHONY: poetry
+poetry:
+	poetry install
+
+.PHONY: lint
+lint:
+	poetry run flake8
+	poetry run black --check openapi_collector --check openapi_proxy
+
+.PHONY: test.unit
+test.unit:
+	poetry run coverage run --source openapi_collector -m py.test tests/collector
+	poetry run coverage run -a --source openapi_proxy -m py.test tests/proxy
+	poetry run coverage report
  
 docker:
 	docker build --build-arg "VERSION=$(VERSION)" -t "$(IMAGE_PREFIX)-router:$(TAG)" -f ./docker/router/Dockerfile .
@@ -22,3 +36,11 @@ push: docker
 	docker push "$(IMAGE_PREFIX)-router:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-collector:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-proxy:$(TAG)"
+
+update-deploy-files:
+	perl -i -pe"s/image: $(subst /,\/,$(IMAGE_PREFIX))-(.*):.*/image: $(subst /,\/,$(IMAGE_PREFIX))-\1:$(subst /,\/,$(TAG))/g" ./deploy/deployment.yaml
+
+kind-load:
+	kind load docker-image $(IMAGE_PREFIX)-router:$(TAG) --name $(CLUSTER_NAME)
+	kind load docker-image $(IMAGE_PREFIX)-collector:$(TAG) --name $(CLUSTER_NAME)
+	kind load docker-image $(IMAGE_PREFIX)-proxy:$(TAG) --name $(CLUSTER_NAME)

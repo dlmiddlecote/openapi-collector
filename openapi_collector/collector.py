@@ -13,7 +13,7 @@ PATH_ANNOTATION = "openapi/path"
 PORT_ANNOTATION = "openapi/port"
 
 
-Spec = namedtuple('Spec', ['name', 'namespace', 'port', 'path'])
+Spec = namedtuple("Spec", ["name", "namespace", "port", "path"])
 
 
 def should_collect(svc):
@@ -45,12 +45,14 @@ def collect_specs(api):
     specs = []
     for svc in pykube.Service.objects(api, namespace=pykube.all):
         if should_collect(svc):
-            logger.info(f'Collecting {svc.namespace}/{svc.name}')
+            logger.info(f"Collecting {svc.namespace}/{svc.name}")
 
             path = parse_path(svc)
             port = parse_port(svc)
             if port is None:
-                logger.warning(f"Cannot parse port for service {svc.namespace}/{svc.name}")
+                logger.warning(
+                    f"Cannot parse port for service {svc.namespace}/{svc.name}"
+                )
                 continue
 
             specs.append(Spec(svc.name, svc.namespace, port, path))
