@@ -46,7 +46,7 @@ def test_collects_service(populated_cluster, svc_resource, collector_url):
     assert "urls" in swagger_conf
     assert 1 == len(swagger_conf["urls"])
     assert f"{namespace}/{name}" == swagger_conf["urls"][0]["name"]
-    assert f"/{name}-{namespace}/api/swagger.json" == swagger_conf["urls"][0]["url"]
+    assert f"/{name}-{namespace}/api/openapi.json" == swagger_conf["urls"][0]["url"]
 
     # Check router configmap has been updated correctly
     assert f"{name}-{namespace}-upstream.conf" in router_cm.obj["data"]
@@ -61,12 +61,22 @@ def test_collects_service(populated_cluster, svc_resource, collector_url):
     assert "urls" in swagger_conf
     assert 1 == len(swagger_conf["urls"])
     assert f"{namespace}/{name}" == swagger_conf["urls"][0]["name"]
-    assert f"/{name}-{namespace}/api/swagger.json" == swagger_conf["urls"][0]["url"]
+    assert f"/{name}-{namespace}/api/openapi.json" == swagger_conf["urls"][0]["url"]
 
     # Check we can get to the exposed API
     logging.info("Requesting spec...")
-    api_spec_path = f"/{name}-{namespace}/api/swagger.json"
+    api_spec_path = f"/{name}-{namespace}/api/openapi.json"
     resp = requests.get(f"{collector_url}{api_spec_path}")
     resp.raise_for_status()
 
     assert resp.json()
+
+    # Check base url has been updated
+    for server in resp.json()["servers"]:
+        assert server["url"].startswith(f"/{name}-{namespace}")
+
+    # Make request via proxy
+    resp = requests.get(f"{collector_url}/{name}-{namespace}/api/")
+    resp.raise_for_status()
+
+    assert "Hey" == resp.text

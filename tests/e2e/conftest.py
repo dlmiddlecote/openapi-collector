@@ -64,7 +64,7 @@ def populated_cluster(cluster):
         cluster.kubectl("apply", "-f", str(test_resources_manifests_path))
 
         logging.info("Waiting for rollout...")
-        cluster.kubectl("rollout", "status", "deployment/petstore")
+        cluster.kubectl("rollout", "status", "deployment/demo-app")
 
         yield cluster
 
@@ -74,7 +74,7 @@ def populated_cluster(cluster):
 
 @fixture(scope="function")
 def svc_resource(populated_cluster):
-    name = "petstore"
+    name = "demo-app"
     namespace = "default"
     api = populated_cluster.api
     svc = pykube.Service.objects(api).get(name=name, namespace=namespace)
