@@ -178,6 +178,12 @@ spec:
         - name: collector
           image: dlmiddlecote/openapi-collector:TO_BE_REPLACED_BY_E2E_TEST
           imagePullPolicy: IfNotPresent
+          command:
+            - python3
+            - -m
+            - openapi_collector
+            - --interval
+            - '5'
           resources:
             requests:
               cpu: 50m

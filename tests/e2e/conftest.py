@@ -1,8 +1,10 @@
 import logging
+import time
 import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
+import pykube
 import yaml
 from pytest import fixture
 
@@ -44,11 +46,39 @@ def cluster(kind_cluster) -> dict:
     logging.info("Waiting for rollout ...")
     kind_cluster.kubectl("rollout", "status", "deployment/openapi-collector")
 
-    with kind_cluster.port_forward("service/openapi-collector", 80) as port:
-        url = f"http://localhost:{port}/"
-        yield {"url": url}
+    return kind_cluster
 
 
 @fixture(scope="session")
+def collector_url(cluster):
+    with cluster.port_forward("svc/openapi-collector", 80) as port:
+        yield f"http://localhost:{port}/"
+
+
+@fixture(scope="function")
 def populated_cluster(cluster):
-    return cluster
+    try:
+        test_resources_manifests_path = Path(__file__).parent / "test-resources.yaml"
+        cluster.kubectl("apply", "-f", str(test_resources_manifests_path))
+        cluster.kubectl("rollout", "status", "deployment/petstore")
+        yield cluster
+    
+    finally:
+        cluster.kubectl("delete", "-f", str(test_resources_manifests_path))
+
+
+@fixture(scope="function")
+def svc_resource(populated_cluster):
+    name = "petstore"
+    namespace = "default"
+    api = populated_cluster.api
+    svc = pykube.Service.objects(api).get(name=name, namespace=namespace)
+
+    # wait some time for collection cycle
+    time.sleep(10)
+
+    yield {
+        "obj": svc,
+        "name": name,
+        "namespace": namespace
+    }

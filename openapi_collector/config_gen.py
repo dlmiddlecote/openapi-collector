@@ -33,7 +33,10 @@ def urljoin(*args):
 
 
 def get_spec_path(spec):
-    return urljoin(spec.path, "openapi.json")
+    if not (spec.path.endswith("openapi.json") or spec.path.endswith("swagger.json")):
+        return urljoin(spec.path, "openapi.json")
+    else:
+        return spec.path.lstrip("/")
 
 
 def build_router_configmap(api, specs):
