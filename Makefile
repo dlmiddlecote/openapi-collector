@@ -41,10 +41,16 @@ docker:
 	docker build --build-arg "VERSION=$(VERSION)" -t "$(IMAGE_PREFIX)-proxy:$(TAG)" -f ./docker/proxy/Dockerfile .
 	@echo 'Docker images $(IMAGE_PREFIX)-router:$(TAG), $(IMAGE_PREFIX)-collector:$(TAG), $(IMAGE_PREFIX)-proxy:$(TAG) can now be used.'
 
-push:
+push: docker
 	docker push "$(IMAGE_PREFIX)-router:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-collector:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-proxy:$(TAG)"
+	docker tag "$(IMAGE_PREFIX)-router:latest"
+	docker tag "$(IMAGE_PREFIX)-collector:latest"
+	docker tag "$(IMAGE_PREFIX)-proxy:latest"
+	docker push "$(IMAGE_PREFIX)-router:latest"
+	docker push "$(IMAGE_PREFIX)-collector:latest"
+	docker push "$(IMAGE_PREFIX)-proxy:latest"
 
 update-deploy-files:
 	perl -i -pe"s/image: $(subst /,\/,$(IMAGE_PREFIX))-(.*):.*/image: $(subst /,\/,$(IMAGE_PREFIX))-\1:$(subst /,\/,$(TAG))/g" ./deploy/deployment.yaml
