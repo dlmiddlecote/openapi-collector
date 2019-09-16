@@ -8,6 +8,7 @@ app.logger = logging.getLogger("openapi_proxy")
 
 
 @app.route("/<path:base_path>/openapi.json", methods=["GET"])
+@app.route("/<path:base_path>/swagger.json", methods=["GET"])
 def get_spec(base_path):
     new_host = request.headers.get("ServerHost")
     if not new_host:
