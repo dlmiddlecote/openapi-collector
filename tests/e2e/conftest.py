@@ -23,7 +23,7 @@ def cluster(kind_cluster) -> dict:
     for image in images.values():
         kind_cluster.load_docker_image(image)
 
-    logging.info("Deploying openapi-collector ...")
+    logging.info("Deploying openapi-collector...")
     deployment_manifests_path = Path(__file__).parent / "deployment.yaml"
 
     with NamedTemporaryFile(mode="w+") as tmp:
@@ -43,7 +43,7 @@ def cluster(kind_cluster) -> dict:
 
         kind_cluster.kubectl("apply", "-f", tmp.name)
 
-    logging.info("Waiting for rollout ...")
+    logging.info("Waiting for rollout...")
     kind_cluster.kubectl("rollout", "status", "deployment/openapi-collector")
 
     return kind_cluster
@@ -52,15 +52,20 @@ def cluster(kind_cluster) -> dict:
 @fixture(scope="session")
 def collector_url(cluster):
     with cluster.port_forward("svc/openapi-collector", 80) as port:
-        yield f"http://localhost:{port}/"
+        yield f"http://localhost:{port}"
 
 
 @fixture(scope="function")
 def populated_cluster(cluster):
     try:
+        logging.info("Deploying test resources...")
+
         test_resources_manifests_path = Path(__file__).parent / "test-resources.yaml"
         cluster.kubectl("apply", "-f", str(test_resources_manifests_path))
+
+        logging.info("Waiting for rollout...")
         cluster.kubectl("rollout", "status", "deployment/petstore")
+
         yield cluster
 
     finally:
@@ -75,6 +80,7 @@ def svc_resource(populated_cluster):
     svc = pykube.Service.objects(api).get(name=name, namespace=namespace)
 
     # wait some time for collection cycle
+    logging.info("Waiting for collection cycle...")
     time.sleep(10)
 
     yield {"obj": svc, "name": name, "namespace": namespace}

@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 
 import pykube
@@ -7,6 +8,9 @@ import requests
 
 def test_initial_config(cluster):
     api = cluster.api
+
+    # Wait for some collection cycles to happen
+    time.sleep(15)
 
     # Check initial ui configmap
     ui_cm = pykube.ConfigMap.objects(api).get(name="openapi-collector-ui-config")
@@ -31,6 +35,7 @@ def test_collects_service(populated_cluster, svc_resource, collector_url):
     name = svc_resource["name"]
     namespace = svc_resource["namespace"]
 
+    logging.info("Getting ConfigMaps...")
     ui_cm = pykube.ConfigMap.objects(api).get(name="openapi-collector-ui-config")
     router_cm = pykube.ConfigMap.objects(api).get(
         name="openapi-collector-router-config"
@@ -48,13 +53,20 @@ def test_collects_service(populated_cluster, svc_resource, collector_url):
     assert f"{name}-{namespace}-location.conf" in router_cm.obj["data"]
 
     # Wait for k8s to inject configmaps into containers
+    logging.info("Waiting for ConfigMap injection ..")
     time.sleep(60)
 
-    # Check config is exposed
-    swagger_conf = requests.get(
-        f"{collector_url.rstrip('/')}/swagger-config.json"
-    ).json()
+    # Check config is exposed to be used by the ui
+    swagger_conf = requests.get(f"{collector_url}/swagger-config.json").json()
     assert "urls" in swagger_conf
     assert 1 == len(swagger_conf["urls"])
     assert f"{namespace}/{name}" == swagger_conf["urls"][0]["name"]
     assert f"/{name}-{namespace}/api/swagger.json" == swagger_conf["urls"][0]["url"]
+
+    # Check we can get to the exposed API
+    logging.info("Requesting spec...")
+    api_spec_path = f"/{name}-{namespace}/api/swagger.json"
+    resp = requests.get(f"{collector_url}{api_spec_path}")
+    resp.raise_for_status()
+
+    assert resp.json()

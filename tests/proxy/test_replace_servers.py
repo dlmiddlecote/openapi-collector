@@ -18,10 +18,10 @@ def test_healthz_200(client):
     assert 200 == resp.status_code
 
 
-@pytest.mark.parametrize('api_type', [
-    pytest.param('openapi', id='openapi'),
-    pytest.param('swagger', id='swagger'),
-])
+@pytest.mark.parametrize(
+    "api_type",
+    [pytest.param("openapi", id="openapi"), pytest.param("swagger", id="swagger")],
+)
 def test_replace_servers_ok(client, monkeypatch, api_type):
     mock_requests = MagicMock()
 
