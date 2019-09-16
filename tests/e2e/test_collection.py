@@ -54,7 +54,7 @@ def test_collects_service(populated_cluster, svc_resource, collector_url):
 
     # Wait for k8s to inject configmaps into containers
     logging.info("Waiting for ConfigMap injection ..")
-    time.sleep(60)
+    time.sleep(90)
 
     # Check config is exposed to be used by the ui
     swagger_conf = requests.get(f"{collector_url}/swagger-config.json").json()

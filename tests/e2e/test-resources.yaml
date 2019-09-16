@@ -37,16 +37,12 @@ spec:
     spec:
       containers:
         - name: petstore
-          image: swaggerapi/petstore3:1.0.3
-          imagePullPolicy: IfNotPresent
+          image: swaggerapi/petstore:latest
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-          resources:
-            requests:
-              cpu: 50m
-              memory: 50Mi
-            limits:
-              cpu: 50m
-              memory: 50Mi
+          readinessProbe:
+            httpGet:
+              path: /api/swagger.json
+              port: http
