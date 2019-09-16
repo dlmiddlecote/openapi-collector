@@ -3,21 +3,32 @@ from unittest.mock import MagicMock
 
 import pykube
 
-from openapi_collector.collector import collect_specs, should_collect, parse_port, parse_path
+from openapi_collector.collector import (
+    collect_specs,
+    should_collect,
+    parse_port,
+    parse_path,
+)
 
 
 def test_should_collect_true():
-    svc = pykube.Service(None, {"metadata": {"annotations": {"openapi/collect": "true"}}})
+    svc = pykube.Service(
+        None, {"metadata": {"annotations": {"openapi/collect": "true"}}}
+    )
     assert should_collect(svc)
 
 
 def test_should_collect_false():
-    svc = pykube.Service(None, {"metadata": {"annotations": {"openapi/collect": "false"}}})
+    svc = pykube.Service(
+        None, {"metadata": {"annotations": {"openapi/collect": "false"}}}
+    )
     assert not should_collect(svc)
 
 
 def test_should_collect_True():
-    svc = pykube.Service(None, {"metadata": {"annotations": {"openapi/collect": "True"}}})
+    svc = pykube.Service(
+        None, {"metadata": {"annotations": {"openapi/collect": "True"}}}
+    )
     assert should_collect(svc)
 
 
@@ -37,29 +48,25 @@ def test_parse_port_default():
 
 
 def test_parse_port_name():
-    svc = pykube.Service(None, {
-        "metadata": {"annotations": {"openapi/port": "api-port"}},
-        "spec": {
-            "ports": [{
-                "name": "api-port",
-                "port": "8000"
-            }]
-        }
-    })
+    svc = pykube.Service(
+        None,
+        {
+            "metadata": {"annotations": {"openapi/port": "api-port"}},
+            "spec": {"ports": [{"name": "api-port", "port": "8000"}]},
+        },
+    )
 
     assert 8000 == parse_port(svc)
 
 
 def test_parse_port_name_missing():
-    svc = pykube.Service(None, {
-        "metadata": {"annotations": {"openapi/port": "missing"}},
-        "spec": {
-            "ports": [{
-                "name": "api-port",
-                "port": "8000"
-            }]
-        }
-    })
+    svc = pykube.Service(
+        None,
+        {
+            "metadata": {"annotations": {"openapi/port": "missing"}},
+            "spec": {"ports": [{"name": "api-port", "port": "8000"}]},
+        },
+    )
 
     assert parse_port(svc) is None
 
@@ -82,15 +89,15 @@ def test_collect_specs_no_cms():
 
         if kwargs.get("url") == "services":
             data = {
-                "items": [{
-                    "metadata": {
-                        "name": "svc-1",
-                        "namespace": "ns-1",
-                        "annotations": {
-                            "openapi/collect": "true",
-                        },
-                    },
-                }],
+                "items": [
+                    {
+                        "metadata": {
+                            "name": "svc-1",
+                            "namespace": "ns-1",
+                            "annotations": {"openapi/collect": "true"},
+                        }
+                    }
+                ]
             }
 
         elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
@@ -138,41 +145,39 @@ def test_collect_specs_cm_replaced():
 
         if kwargs.get("url") == "services":
             data = {
-                "items": [{
-                    "metadata": {
-                        "name": "svc-1",
-                        "namespace": "ns-1",
-                        "annotations": {
-                            "openapi/collect": "true",
-                        },
-                    },
-                }],
+                "items": [
+                    {
+                        "metadata": {
+                            "name": "svc-1",
+                            "namespace": "ns-1",
+                            "annotations": {"openapi/collect": "true"},
+                        }
+                    }
+                ]
             }
 
         elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
             data = {
-                "items": [{
-                    "metadata": {
-                        "name": "openapi-collector-router-config"
-                    },
-                    "data": {
-                        "foo.conf": ""
+                "items": [
+                    {
+                        "metadata": {"name": "openapi-collector-router-config"},
+                        "data": {"foo.conf": ""},
                     }
-                }]
+                ]
             }
 
         elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
             data = {
-                "items": [{
-                    "metadata": {
-                        "name": "openapi-collector-ui-config"
-                    },
-                    "data": {
-                        "swagger-config.json": """{
+                "items": [
+                    {
+                        "metadata": {"name": "openapi-collector-ui-config"},
+                        "data": {
+                            "swagger-config.json": """{
                             "urls": [{"name": "foo", "url": "/foo}]
                         }"""
+                        },
                     }
-                }]
+                ]
             }
 
         else:
@@ -219,15 +224,15 @@ def test_collect_specs_no_services():
 
         if kwargs.get("url") == "services":
             data = {
-                "items": [{
-                    "metadata": {
-                        "name": "svc-1",
-                        "namespace": "ns-1",
-                        "annotations": {
-                            "openapi/collect": "false",
-                        },
-                    },
-                }],
+                "items": [
+                    {
+                        "metadata": {
+                            "name": "svc-1",
+                            "namespace": "ns-1",
+                            "annotations": {"openapi/collect": "false"},
+                        }
+                    }
+                ]
             }
 
         elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
@@ -276,27 +281,26 @@ def test_collect_specs_skip_no_port():
 
         if kwargs.get("url") == "services":
             data = {
-                "items": [{
-                    "metadata": {
-                        "name": "svc-1",
-                        "namespace": "ns-1",
-                        "annotations": {
-                            "openapi/collect": "true",
-                            "openapi/port": "missing",
+                "items": [
+                    {
+                        "metadata": {
+                            "name": "svc-1",
+                            "namespace": "ns-1",
+                            "annotations": {
+                                "openapi/collect": "true",
+                                "openapi/port": "missing",
+                            },
                         },
+                        "spec": {"ports": []},
                     },
-                    "spec": {
-                        "ports": [],
+                    {
+                        "metadata": {
+                            "name": "svc-2",
+                            "namespace": "ns-1",
+                            "annotations": {"openapi/collect": "true"},
+                        }
                     },
-                }, {
-                    "metadata": {
-                        "name": "svc-2",
-                        "namespace": "ns-1",
-                        "annotations": {
-                            "openapi/collect": "true",
-                        },
-                    },
-                }],
+                ]
             }
 
         elif kwargs.get("url") == "configmaps/openapi-collector-router-config":

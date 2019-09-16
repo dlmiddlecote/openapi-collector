@@ -29,13 +29,17 @@ def test_build_router_configmap():
     assert "test-svc-test-ns-upstream.conf" in cm.obj["data"]
     assert "test-svc-test-ns-location.conf" in cm.obj["data"]
 
-    assert """
+    assert (
+        """
 upstream test-svc-test-ns {
   server test-svc.test-ns:8000;
 }
-""" == cm.obj["data"]["test-svc-test-ns-upstream.conf"]
+"""
+        == cm.obj["data"]["test-svc-test-ns-upstream.conf"]
+    )
 
-    assert """
+    assert (
+        """
 location = /test-svc-test-ns/openapi.json {
   proxy_set_header ServerHost "http://test-svc.test-ns:8000";
   proxy_pass       http://proxy;
@@ -45,7 +49,9 @@ location /test-svc-test-ns {
   rewrite          /test-svc-test-ns/(.*) /$1 break;
   proxy_pass       http://test-svc-test-ns;
 }
-""" == cm.obj["data"]["test-svc-test-ns-location.conf"]
+"""
+        == cm.obj["data"]["test-svc-test-ns-location.conf"]
+    )
 
 
 def test_build_router_configmap_with_path():
@@ -65,13 +71,17 @@ def test_build_router_configmap_with_path():
     assert "test-svc-test-ns-upstream.conf" in cm.obj["data"]
     assert "test-svc-test-ns-location.conf" in cm.obj["data"]
 
-    assert """
+    assert (
+        """
 upstream test-svc-test-ns {
   server test-svc.test-ns:8000;
 }
-""" == cm.obj["data"]["test-svc-test-ns-upstream.conf"]
+"""
+        == cm.obj["data"]["test-svc-test-ns-upstream.conf"]
+    )
 
-    assert """
+    assert (
+        """
 location = /test-svc-test-ns/v1/openapi.json {
   proxy_set_header ServerHost "http://test-svc.test-ns:8000";
   proxy_pass       http://proxy;
@@ -81,7 +91,9 @@ location /test-svc-test-ns {
   rewrite          /test-svc-test-ns/(.*) /$1 break;
   proxy_pass       http://test-svc-test-ns;
 }
-""" == cm.obj["data"]["test-svc-test-ns-location.conf"]
+"""
+        == cm.obj["data"]["test-svc-test-ns-location.conf"]
+    )
 
 
 def test_build_ui_configmap():
