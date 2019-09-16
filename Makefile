@@ -53,3 +53,6 @@ kind-load:
 	kind load docker-image $(IMAGE_PREFIX)-router:$(TAG) --name $(CLUSTER_NAME)
 	kind load docker-image $(IMAGE_PREFIX)-collector:$(TAG) --name $(CLUSTER_NAME)
 	kind load docker-image $(IMAGE_PREFIX)-proxy:$(TAG) --name $(CLUSTER_NAME)
+
+format:
+	poetry run black openapi_collector openapi_proxy tests
