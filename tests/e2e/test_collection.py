@@ -28,7 +28,6 @@ def test_initial_config(cluster):
 def test_collects_service(populated_cluster, svc_resource, collector_url):
     api = populated_cluster.api
 
-    svc = svc_resource["obj"]
     name = svc_resource["name"]
     namespace = svc_resource["namespace"]
 
@@ -52,7 +51,9 @@ def test_collects_service(populated_cluster, svc_resource, collector_url):
     time.sleep(60)
 
     # Check config is exposed
-    swagger_conf = requests.get(f"{collector_url.rstrip('/')}/swagger-config.json").json()
+    swagger_conf = requests.get(
+        f"{collector_url.rstrip('/')}/swagger-config.json"
+    ).json()
     assert "urls" in swagger_conf
     assert 1 == len(swagger_conf["urls"])
     assert f"{namespace}/{name}" == swagger_conf["urls"][0]["name"]

@@ -62,7 +62,7 @@ def populated_cluster(cluster):
         cluster.kubectl("apply", "-f", str(test_resources_manifests_path))
         cluster.kubectl("rollout", "status", "deployment/petstore")
         yield cluster
-    
+
     finally:
         cluster.kubectl("delete", "-f", str(test_resources_manifests_path))
 
@@ -77,8 +77,4 @@ def svc_resource(populated_cluster):
     # wait some time for collection cycle
     time.sleep(10)
 
-    yield {
-        "obj": svc,
-        "name": name,
-        "namespace": namespace
-    }
+    yield {"obj": svc, "name": name, "namespace": namespace}
