@@ -9,7 +9,7 @@ CLUSTER_NAME ?= kind
 default: docker
 
 .PHONY: test
-test: poetry lint test.unit
+test: poetry lint test.unit test.e2e
 
 .PHONY: poetry
 poetry:
@@ -41,7 +41,7 @@ docker:
 	docker build --build-arg "VERSION=$(VERSION)" -t "$(IMAGE_PREFIX)-proxy:$(TAG)" -f ./docker/proxy/Dockerfile .
 	@echo 'Docker images $(IMAGE_PREFIX)-router:$(TAG), $(IMAGE_PREFIX)-collector:$(TAG), $(IMAGE_PREFIX)-proxy:$(TAG) can now be used.'
 
-push: docker
+push:
 	docker push "$(IMAGE_PREFIX)-router:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-collector:$(TAG)"
 	docker push "$(IMAGE_PREFIX)-proxy:$(TAG)"

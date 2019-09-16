@@ -8,6 +8,6 @@ services:
 install:
   - pip install poetry
 script:
-  - make test docker
+  - make test push
 after_success:
   - coveralls
