@@ -1,0 +1,17 @@
+__pycache__
+*.swp
+*.pyc
+.idea/
+.tox/
+*.egg*
+dist/
+.cache/
+.coverage
+*.bak
+htmlcov/
+.pytest_cache/
+.vscode
+
+kind
+kubectl
+.kube
