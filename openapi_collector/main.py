@@ -5,7 +5,7 @@ from openapi_collector import __version__, cmd, shutdown
 from openapi_collector.collector import collect_specs
 from openapi_collector.helpers import get_kube_api
 
-logger = logging.getLogger('collector')
+logger = logging.getLogger("collector")
 
 
 def main(args=None):

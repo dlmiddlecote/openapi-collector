@@ -10,7 +10,8 @@ from openapi_collector.main import main
 @pytest.fixture
 def kubeconfig(tmpdir):
     kubeconfig = tmpdir.join("kubeconfig")
-    kubeconfig.write("""
+    kubeconfig.write(
+        """
 apiVersion: v1
 clusters:
 - cluster: {server: "https://localhost:9443"}
@@ -24,7 +25,8 @@ preferences: {}
 users:
 - name: test
   user: {token: test}
-    """)
+    """
+    )
     return kubeconfig
 
 

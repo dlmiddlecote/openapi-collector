@@ -1,19 +1,25 @@
-FROM python:3.7-alpine
+FROM python:3.7-slim
 
 WORKDIR /
 
-COPY Pipfile.lock /
-COPY pipenv-install.py /
+RUN pip3 install poetry
 
-RUN /pipenv-install.py && \
-    rm -fr /usr/local/lib/python3.7/site-packages/pip && \
-    rm -fr /usr/local/lib/python3.7/site-packages/setuptools
+COPY poetry.lock /
+COPY pyproject.toml /
 
-FROM python:3.7-alpine
+# fake package to make Poetry happy
+RUN mkdir /openapi_proxy && touch /openapi_proxy/__init__.py && touch /README.md
+
+RUN poetry config settings.virtualenvs.create false && \
+    poetry install --no-interaction --no-dev --no-ansi
+
+FROM python:3.7-slim
 
 WORKDIR /
 
+# copy pre-built packages to this image
 COPY --from=0 /usr/local/lib/python3.7/site-packages /usr/local/lib/python3.7/site-packages
+
 COPY openapi_proxy /openapi_proxy
 
 ARG VERSION=dev

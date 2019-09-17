@@ -1,0 +1,200 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: openapi-collector
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: openapi-collector
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - create
+      - patch
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: openapi-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: openapi-collector
+subjects:
+  - kind: ServiceAccount
+    name: openapi-collector
+    namespace: default
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openapi-collector-ui-config
+  labels:
+    app: openapi-collector
+data:
+  swagger-config.json: |
+    {
+      "urls": []
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openapi-collector-router-config
+  labels:
+    app: openapi-collector
+data: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openapi-collector
+  labels:
+    app: openapi-collector
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: openapi-collector
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openapi-collector
+  labels:
+    app: openapi-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openapi-collector
+  template:
+    metadata:
+      labels:
+        app: openapi-collector
+    spec:
+      serviceAccountName: openapi-collector
+      containers:
+        - name: ui
+          image: swaggerapi/swagger-ui:v3.20.8
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CONFIG_URL
+              value: /swagger-config.json
+          ports:
+            - name: ui
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: ui
+          readinessProbe:
+            httpGet:
+              path: /
+              port: ui
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+        - name: router
+          image: dlmiddlecote/openapi-router:TO_BE_REPLACED_BY_E2E_TEST
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /swagger-config.json
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /swagger-config.json
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+          volumeMounts:
+            - name: ui-config
+              mountPath: /www/data
+              readOnly: true
+            - name: router-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+        - name: proxy
+          image: dlmiddlecote/openapi-proxy:TO_BE_REPLACED_BY_E2E_TEST
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: proxy
+              containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: proxy
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: proxy
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+        - name: collector
+          image: dlmiddlecote/openapi-collector:TO_BE_REPLACED_BY_E2E_TEST
+          imagePullPolicy: IfNotPresent
+          command:
+            - python3
+            - -m
+            - openapi_collector
+            - --interval
+            - '5'
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+      volumes:
+        - name: ui-config
+          configMap:
+            name: openapi-collector-ui-config
+        - name: router-config
+          configMap:
+            name: openapi-collector-router-config

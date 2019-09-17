@@ -3,8 +3,8 @@ import json
 import pykube
 
 
-ROUTER_CONFIGMAP_NAME = 'openapi-collector-router-config'
-UI_CONFIGMAP_NAME = 'openapi-collector-ui-config'
+ROUTER_CONFIGMAP_NAME = "openapi-collector-router-config"
+UI_CONFIGMAP_NAME = "openapi-collector-ui-config"
 
 NGINX_UPSTREAM_TMPL = """
 upstream {host} {{
@@ -33,15 +33,14 @@ def urljoin(*args):
 
 
 def get_spec_path(spec):
-    return urljoin(spec.path, "openapi.json")
+    if not (spec.path.endswith("openapi.json") or spec.path.endswith("swagger.json")):
+        return urljoin(spec.path, "openapi.json")
+    else:
+        return spec.path.lstrip("/")
 
 
 def build_router_configmap(api, specs):
-    cm_spec = {
-        "metadata": {
-            "name": ROUTER_CONFIGMAP_NAME,
-        },
-    }
+    cm_spec = {"metadata": {"name": ROUTER_CONFIGMAP_NAME}}
 
     cm_data = {}
 
@@ -53,10 +52,7 @@ def build_router_configmap(api, specs):
         spec_path = get_spec_path(spec)
 
         cm_data[upstream_filename] = NGINX_UPSTREAM_TMPL.format(
-            host=host,
-            name=spec.name,
-            namespace=spec.namespace,
-            port=spec.port,
+            host=host, name=spec.name, namespace=spec.namespace, port=spec.port
         )
         cm_data[location_filename] = NGINX_LOCATION_TMPL.format(
             host=host,
@@ -72,19 +68,17 @@ def build_router_configmap(api, specs):
 
 
 def build_ui_configmap(api, specs):
-    cm_spec = {
-        "metadata": {
-            "name": UI_CONFIGMAP_NAME,
-        },
-    }
+    cm_spec = {"metadata": {"name": UI_CONFIGMAP_NAME}}
 
     urls = []
     for spec in specs:
         host = f"{spec.name}-{spec.namespace}"
-        urls.append({
-            "name": f"{spec.namespace}/{spec.name}",
-            "url": f"/{urljoin(host, get_spec_path(spec))}"
-        })
+        urls.append(
+            {
+                "name": f"{spec.namespace}/{spec.name}",
+                "url": f"/{urljoin(host, get_spec_path(spec))}",
+            }
+        )
 
     cm_spec["data"] = {"swagger-config.json": json.dumps({"urls": urls})}
 
