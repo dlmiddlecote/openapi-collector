@@ -1,7 +1,7 @@
 .PHONY: test docker push
 
 IMAGE_PREFIX ?= dlmiddlecote/openapi
-GITDIFFHASH       = $(shell git diff | md5sum | cut -c 1-4)
+GITDIFFHASH  = $(shell git diff | md5sum | cut -c 1-4)
 VERSION      ?= $(shell git describe --tags --always --dirty=-dirty-$(GITDIFFHASH))
 TAG          ?= $(VERSION)
 CLUSTER_NAME ?= kind
@@ -25,12 +25,12 @@ test.unit:
 	poetry run coverage run --source openapi_collector -m py.test tests/collector
 	poetry run coverage run -a --source openapi_proxy -m py.test tests/proxy
 	poetry run coverage report
- 
+
 .PHONY: test.e2e
 test.e2e: docker
 	env IMAGE_PREFIX=$(IMAGE_PREFIX) TAG=$(TAG) \
 			poetry run pytest -v -r=a \
-			       --log-cli-level info \
+				   --log-cli-level info \
 				   --log-cli-format '%(asctime)s %(levelname)s %(message)s' \
 				   --cluster-name $(CLUSTER_NAME) \
 				   tests/e2e
