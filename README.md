@@ -86,10 +86,9 @@ The best way to contribute is to provide feedback. I’d love to hear what you l
 
 You can run the collector against your current kubeconfig context like this:
 ```
-$ pip install pipenv
-$ pipenv install --dev
-$ pipenv shell
-$ python -m openapi_collector
+$ pip install poetry
+$ poetry install
+$ poetry run python -m openapi_collector
 ```
 
 To run tests:
