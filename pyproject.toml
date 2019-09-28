@@ -17,7 +17,7 @@ coveralls = "^1.8"
 coverage = "^4.5"
 pylint = "^2.4"
 pytest-kind = "^19.9"
-black = {version = "^18.3-alpha.0", allows-prereleases = true}
+black = {version = "^19.3b0", allows-prereleases = true}
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
