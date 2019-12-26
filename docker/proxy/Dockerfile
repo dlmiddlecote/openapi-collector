@@ -10,7 +10,7 @@ COPY pyproject.toml /
 # fake package to make Poetry happy
 RUN mkdir /openapi_proxy && touch /openapi_proxy/__init__.py && touch /README.md
 
-RUN poetry config settings.virtualenvs.create false && \
+RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-dev --no-ansi
 
 FROM python:3.7-slim
