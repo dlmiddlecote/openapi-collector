@@ -5,7 +5,7 @@ description = ""
 authors = ["Daniel Middlecote <dan@dlmiddlecote.io>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 pykube-ng = {version = "^20.1", extras = ["gcp"]}
 requests = "^2.22"
 flask = "^1.1"
@@ -19,5 +19,5 @@ pylint = "^2.4"
 pytest-kind = "^20.1"
 black = {version = "^19.10b0", allow-prereleases = true}
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.0"]
 build-backend = "poetry.masonry.api"
