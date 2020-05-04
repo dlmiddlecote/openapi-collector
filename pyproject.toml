@@ -16,7 +16,7 @@ pytest-cov = "^2.8"
 coveralls = "^1.10"
 coverage = "^5.0"
 pylint = "^2.4"
-pytest-kind = "^20.1"
+pytest-kind = "^20.5"
 black = {version = "^19.10b0", allow-prereleases = true}
 [build-system]
 requires = ["poetry>=1.0"]
