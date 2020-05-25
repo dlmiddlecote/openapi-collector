@@ -12,7 +12,7 @@ flask = "^1.1"
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
 pytest = "^5.3"
-pytest-cov = "^2.8"
+pytest-cov = "^2.9"
 coveralls = "^1.10"
 coverage = "^5.0"
 pylint = "^2.4"
