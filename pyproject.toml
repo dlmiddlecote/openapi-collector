@@ -7,7 +7,7 @@ authors = ["Daniel Middlecote <dan@dlmiddlecote.io>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 pykube-ng = {version = "^20.7", extras = ["gcp"]}
-requests = "^2.22"
+requests = "^2.24"
 flask = "^1.1"
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
