@@ -10,7 +10,7 @@ pykube-ng = {version = "^20.7", extras = ["gcp"]}
 requests = "^2.22"
 flask = "^1.1"
 [tool.poetry.dev-dependencies]
-flake8 = "^3.7"
+flake8 = "^3.8"
 pytest = "^5.3"
 pytest-cov = "^2.8"
 coveralls = "^1.10"
