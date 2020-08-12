@@ -119,11 +119,11 @@ category = "dev"
 description = "Show coverage stats online via coveralls.io"
 name = "coveralls"
 optional = false
-python-versions = "*"
-version = "1.10.0"
+python-versions = ">= 3.5"
+version = "2.1.2"
 
 [package.dependencies]
-coverage = ">=3.6,<6.0"
+coverage = ">=4.1,<6.0"
 docopt = ">=0.6.1"
 requests = ">=1.0.0"
 
@@ -578,7 +578,7 @@ python-versions = "*"
 version = "1.11.2"
 
 [metadata]
-content-hash = "cdf232ab8b7d6b795550ca0da3374b12a282b3a1a0c21bcb17efe2e802602135"
+content-hash = "fdf0e88cc724e816cfff16228dd67db6ba2272ac3707d3a98d21edfe0dbec6c4"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -656,8 +656,8 @@ coverage = [
     {file = "coverage-5.0.3.tar.gz", hash = "sha256:77afca04240c40450c331fa796b3eab6f1e15c5ecf8bf2b8bee9706cd5452fef"},
 ]
 coveralls = [
-    {file = "coveralls-1.10.0-py2.py3-none-any.whl", hash = "sha256:906e07a12b2ac04b8ad782d06173975fe5ff815fe9df3bfedd2c099bc5791aec"},
-    {file = "coveralls-1.10.0.tar.gz", hash = "sha256:2da39aeaef986757653f0a442ba2bef22a8ec602c8bacbc69d39f468dfae12ec"},
+    {file = "coveralls-2.1.2-py2.py3-none-any.whl", hash = "sha256:b3b60c17b03a0dee61952a91aed6f131e0b2ac8bd5da909389c53137811409e1"},
+    {file = "coveralls-2.1.2.tar.gz", hash = "sha256:4430b862baabb3cf090d36d84d331966615e4288d8a8c5957e0fd456d0dd8bd6"},
 ]
 decorator = [
     {file = "decorator-4.4.1-py2.py3-none-any.whl", hash = "sha256:5d19b92a3c8f7f101c8dd86afd86b0f061a8ce4540ab8cd401fa2542756bce6d"},
