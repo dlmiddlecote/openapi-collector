@@ -15,7 +15,7 @@ pytest = "^5.3"
 pytest-cov = "^2.8"
 coveralls = "^1.10"
 coverage = "^5.0"
-pylint = "^2.4"
+pylint = "^2.6"
 pytest-kind = "^20.1"
 black = {version = "^19.10b0", allow-prereleases = true}
 [build-system]
