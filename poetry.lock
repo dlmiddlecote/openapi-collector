@@ -461,7 +461,7 @@ description = "Kubernetes test support with KIND for pytest"
 name = "pytest-kind"
 optional = false
 python-versions = ">=3.7,<4.0"
-version = "20.1.0"
+version = "20.10.0"
 
 [package.dependencies]
 pykube-ng = ">=0.30.0"
@@ -578,7 +578,8 @@ python-versions = "*"
 version = "1.11.2"
 
 [metadata]
-content-hash = "cdf232ab8b7d6b795550ca0da3374b12a282b3a1a0c21bcb17efe2e802602135"
+content-hash = "cef7efe826f2a9eeb75839a13d0cd9ee00ec5b53da9a6cd70fa9541d6de69394"
+lock-version = "1.0"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -847,8 +848,8 @@ pytest-cov = [
     {file = "pytest_cov-2.8.1-py2.py3-none-any.whl", hash = "sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626"},
 ]
 pytest-kind = [
-    {file = "pytest-kind-20.1.0.tar.gz", hash = "sha256:1c89d5a62b17432ef433f5a4b1aaaf3ee5ad1d03c01520f7d4fb36f140387d0c"},
-    {file = "pytest_kind-20.1.0-py3-none-any.whl", hash = "sha256:6a44a23daad7618a6417770b516df401da6aa7b78aae80314c0a53b09aa85160"},
+    {file = "pytest-kind-20.10.0.tar.gz", hash = "sha256:2242eca056adc47d5ac5e6ec96d1355ea8e53b1ca4fbc1704fc461605170a44e"},
+    {file = "pytest_kind-20.10.0-py3-none-any.whl", hash = "sha256:b3cd0722d99fd28e70f134c53de282652c116b4f6b92e3718a24d82d3c2ee491"},
 ]
 pyyaml = [
     {file = "PyYAML-5.3-cp27-cp27m-win32.whl", hash = "sha256:940532b111b1952befd7db542c370887a8611660d2b9becff75d39355303d82d"},
