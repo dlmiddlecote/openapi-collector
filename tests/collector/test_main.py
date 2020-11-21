@@ -1,7 +1,5 @@
 import pytest
 
-import os.path
-
 from unittest.mock import MagicMock
 
 from openapi_collector.main import main
@@ -27,11 +25,11 @@ users:
   user: {token: test}
     """
     )
-    return kubeconfig
+    return str(kubeconfig)
 
 
 def test_main_continue_on_failure(kubeconfig, monkeypatch):
-    monkeypatch.setattr(os.path, "expanduser", lambda x: str(kubeconfig))
+    monkeypatch.setenv("KUBECONFIG", kubeconfig)
 
     mock_shutdown = MagicMock()
     mock_handler = MagicMock()

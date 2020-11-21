@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "openapi-collector"
-version = "0.1.3"
+version = "0.1.6"
 description = ""
 authors = ["Daniel Middlecote <dan@dlmiddlecote.io>"]
 
