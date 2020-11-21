@@ -100,12 +100,12 @@ def test_collect_specs_no_cms():
                 ]
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-router-config":
             data = {}
             response.status_code = 404
             response.ok = False
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-ui-config":
             data = {}
             response.status_code = 404
             response.ok = False
@@ -156,7 +156,7 @@ def test_collect_specs_cm_replaced():
                 ]
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-router-config":
             data = {
                 "items": [
                     {
@@ -166,7 +166,7 @@ def test_collect_specs_cm_replaced():
                 ]
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-ui-config":
             data = {
                 "items": [
                     {
@@ -210,10 +210,10 @@ def test_collect_specs_cm_replaced():
     assert "foo" not in set(u["name"] for u in swagger_conf["urls"])
 
     _, nginx_delete_call = api_mock.delete.call_args_list[0]
-    assert "configmaps/openapi-collector-router-config" == nginx_delete_call["url"]
+    assert "/configmaps/openapi-collector-router-config" == nginx_delete_call["url"]
 
     _, swagger_delete_call = api_mock.delete.call_args_list[1]
-    assert "configmaps/openapi-collector-ui-config" == swagger_delete_call["url"]
+    assert "/configmaps/openapi-collector-ui-config" == swagger_delete_call["url"]
 
 
 def test_collect_specs_no_services():
@@ -235,12 +235,12 @@ def test_collect_specs_no_services():
                 ]
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-router-config":
             data = {}
             response.status_code = 404
             response.ok = False
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-ui-config":
             data = {}
             response.status_code = 404
             response.ok = False
@@ -303,12 +303,12 @@ def test_collect_specs_skip_no_port():
                 ]
             }
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-router-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-router-config":
             data = {}
             response.status_code = 404
             response.ok = False
 
-        elif kwargs.get("url") == "configmaps/openapi-collector-ui-config":
+        elif kwargs.get("url") == "/configmaps/openapi-collector-ui-config":
             data = {}
             response.status_code = 404
             response.ok = False
