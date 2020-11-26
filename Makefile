@@ -1,6 +1,6 @@
 .PHONY: test docker push
 
-IMAGE_PREFIX ?= dlmiddlecote/openapi
+IMAGE_PREFIX ?= ghcr.io/dlmiddlecote/openapi
 GITDIFFHASH  = $(shell git diff | md5sum | cut -c 1-4)
 VERSION      ?= $(shell git describe --tags --always --dirty=-dirty-$(GITDIFFHASH))
 TAG          ?= $(VERSION)
