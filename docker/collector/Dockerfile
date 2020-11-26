@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 WORKDIR /
 
@@ -13,12 +13,12 @@ RUN mkdir /openapi_collector && touch /openapi_collector/__init__.py && touch /R
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-dev --no-ansi
 
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 WORKDIR /
 
 # copy pre-built packages to this image
-COPY --from=0 /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+COPY --from=0 /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
 # copy actual code
 COPY openapi_collector /openapi_collector
