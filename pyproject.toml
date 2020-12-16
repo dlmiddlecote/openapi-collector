@@ -11,7 +11,7 @@ requests = "^2.22"
 flask = "^1.1"
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
-pytest = "6.1.2"
+pytest = "6.2.1"
 pytest-cov = "^2.8"
 coveralls = "2.2.0"
 coverage = "^5.0"
