@@ -453,7 +453,7 @@ testing = ["fields", "hunter", "process-tests (==2.0.2)", "six", "pytest-xdist",
 
 [[package]]
 name = "pytest-kind"
-version = "20.10.0"
+version = "21.1.2"
 description = "Kubernetes test support with KIND for pytest"
 category = "dev"
 optional = false
@@ -575,7 +575,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "0714673c60f127df83f40673349888aeb4c003dffb3131baa9e7406b016fbac5"
+content-hash = "14b2fb8db3043de3501116e12300de1b2271c2083484ab0168e592fe754eb02e"
 
 [metadata.files]
 appdirs = [
@@ -845,8 +845,8 @@ pytest-cov = [
     {file = "pytest_cov-2.10.1-py2.py3-none-any.whl", hash = "sha256:45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191"},
 ]
 pytest-kind = [
-    {file = "pytest-kind-20.10.0.tar.gz", hash = "sha256:2242eca056adc47d5ac5e6ec96d1355ea8e53b1ca4fbc1704fc461605170a44e"},
-    {file = "pytest_kind-20.10.0-py3-none-any.whl", hash = "sha256:b3cd0722d99fd28e70f134c53de282652c116b4f6b92e3718a24d82d3c2ee491"},
+    {file = "pytest-kind-21.1.2.tar.gz", hash = "sha256:6de67b03faa9dae74f51bc71fcab6e63c87e77d09eeeb0c1bb3dd5ad9f237be8"},
+    {file = "pytest_kind-21.1.2-py3-none-any.whl", hash = "sha256:13ead2d1ec4eec58e75c34233515e3f56ab37fe0c4632076cf6d2c92eb7d5cab"},
 ]
 pyyaml = [
     {file = "PyYAML-5.3.1-cp27-cp27m-win32.whl", hash = "sha256:74809a57b329d6cc0fdccee6318f44b9b8649961fa73144a98735b0aaf029f1f"},
